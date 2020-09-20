@@ -3,5 +3,4 @@ from .models import *
 # Register your models here.
 admin.site.register(Booking)
 admin.site.register(Category)
-admin.site.register(TypeHotel)
 admin.site.register(Countery)

@@ -11,6 +11,18 @@ class Booking(models.Model):
 		('VIP Single Room','VIP Single Room'),
 		('VIP Double Room','VIP Double Room'),
 		)
+	ROOM_CONDITION = (
+		('Good','Good'),
+		('Very Good','Very Good'),
+		('Good','Good'),
+		('Very Good','Very Good'),
+
+		)
+	STATUS_ROOM = (
+		('booked up','booked up'),
+		('Available','Available'),
+
+		)
 	owner     = models.ForeignKey(User,related_name='book_owner', on_delete=models.CASCADE,blank=True, null=True)
 	title     = models.CharField(max_length=100)
 	room      = models.CharField(max_length=100,choices=ROOMTYPE,null=True)
@@ -22,8 +34,9 @@ class Booking(models.Model):
 	price     = models.FloatField(default=True)
 	active    = models.BooleanField(default=False)
 	category  = models.ForeignKey('Category',limit_choices_to={'main_category':True},related_name='booking_category', on_delete=models.CASCADE,blank=True,null=True)
-	typehotel = models.ForeignKey('TypeHotel',related_name='TypeHotel', on_delete=models.CASCADE,blank=True,null=True)
 	countery  = models.ForeignKey('Countery',limit_choices_to={'main_countery':True},related_name='booking_countery', on_delete=models.CASCADE,blank=True,null=True)
+	condition = models.CharField(max_length=15,choices=ROOM_CONDITION,null=True, blank=True)
+	status_room = models.CharField(max_length=15,choices = STATUS_ROOM,null=True, blank=True)
 
 
 	def save(self,*args,**kwargs):
@@ -56,18 +69,14 @@ class Countery(models.Model):
 	def __str__(self):
 		return self.name
 
-# class countery(models.Model):
 
-# 	name = models.CharField(max_length=50)
-#     main_countery = models.ForeignKey(self,related_name='maincountery', on_delete=models.CASCADE,blank=True,null=True)
-#     image = models.CharField(max_length=50)
+class Order(models.Model):
+	STATUS = (
+			('Booked', 'Booked'),
+			('No room reservation', 'No room reservation'),
+			)
+	booking = models.ForeignKey(Booking, null=True, on_delete= models.CASCADE, blank=True)
+	date_created = models.DateTimeField(auto_now_add=True, null=True)
 
-#     def __str__(self):
-#         return self.name
-
-class TypeHotel(models.Model):
-
-	name = models.CharField(max_length=50)
- 	
 	def __str__(self):
-		return self.name
+		return self.booking.name
